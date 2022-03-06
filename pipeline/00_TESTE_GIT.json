@@ -1,0 +1,22 @@
+{
+	"name": "00_TESTE_GIT",
+	"properties": {
+		"description": "Somente para testar o PullRequest",
+		"activities": [
+			{
+				"name": "Wait1",
+				"description": "Somente para testar o Git ",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 3
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/02_HANDSON"
+		},
+		"annotations": []
+	}
+}
