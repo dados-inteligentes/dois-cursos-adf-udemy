@@ -1,0 +1,20 @@
+{
+	"name": "02_TRIGGER_TUMBLING",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 2
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/03_HANDSON"
+		},
+		"annotations": []
+	}
+}
