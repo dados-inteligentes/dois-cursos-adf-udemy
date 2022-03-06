@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "05_PRATICA",
+					"referenceName": "01_TRIGGER_SCHEDULER",
 					"type": "PipelineReference"
 				}
 			}
