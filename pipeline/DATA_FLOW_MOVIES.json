@@ -1,0 +1,49 @@
+{
+	"name": "DATA_FLOW_MOVIES",
+	"properties": {
+		"activities": [
+			{
+				"name": "data flow movies",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DATAFLOW_MOVIES",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"Origem": {
+								"container": "curso-dozero-engdados-udemy",
+								"path": "raw",
+								"fileName": "movies.csv"
+							},
+							"sink1": {
+								"container": "curso-dozero-engdados-udemy",
+								"path": "gold",
+								"fileName": "movies.csv"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO-DOZERO-ENG-DADOS-UDEMY"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T23:49:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

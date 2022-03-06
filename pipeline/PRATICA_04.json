@@ -1,0 +1,66 @@
+{
+	"name": "PRATICA_04",
+	"properties": {
+		"activities": [
+			{
+				"name": "exec pipeline 01",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PRATICA_01",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "exec pipeline 02",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "exec pipeline 01",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PRATICA_02",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "exec pipeline 03",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "exec pipeline 02",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PRATICA_03",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/01_HANDSON"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T23:43:38Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,231 @@
+{
+	"name": "06_PIPE_FOR_EACH",
+	"properties": {
+		"activities": [
+			{
+				"name": "foreach",
+				"description": "No forEach marquei a opção SEQUENCIAL",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ler csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('ler csv').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "loop_01",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "ler csv",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "*.csv"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "lookup1 sql",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_AZURE_SQL_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"table": "ProductCategory"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "filter3",
+				"description": "Filtrar todos que contem BIKE",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lookup1 sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1_SQL').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().name, 'Bike') ",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "foreach filter",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filter3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter3').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "loop_02",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "foreach lookup",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "lookup csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_CSV').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "loop_03",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "lookup csv",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "plan_cores.csv"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/00_ACTIVITIES"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T23:47:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

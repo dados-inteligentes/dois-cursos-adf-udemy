@@ -1,0 +1,163 @@
+{
+	"name": "03_PIPE_LOOKUP",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup csv",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "plan_cores.csv"
+						}
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "lookup1 sql",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Lookup csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_AZURE_SQL_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"table": "ProductCategory"
+						}
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "lookup query",
+				"description": "Aqui vou utilizar o arrayMode. Devo desmacar a opção de exibir a primeira linha. ",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "lookup1 sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "\n\nSELECT TABLE_SCHEMA, TABLE_NAME\nFROM INFORMATION_SCHEMA.TABLES\nWHERE TABLE_TYPE = 'BASE TABLE'\nAND TABLE_SCHEMA = 'SALESLT'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_AZURE_SQL_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"table": "ProductCategory"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "lookup procedure",
+				"description": "Aqui vou utilizar o arrayMode. Devo desmacar a opção de exibir a primeira linha. ",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "lookup query",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[PROC_LOOKUP_ADF]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_AZURE_SQL_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"table": "ProductCategory"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/00_ACTIVITIES"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T23:47:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,47 @@
+{
+	"name": "DATAFLOW_MOVIES",
+	"properties": {
+		"folder": {
+			"name": "CURSO-DOZERO-ENG-DADOS-UDEMY"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS2_CSV_GENERICO",
+						"type": "DatasetReference"
+					},
+					"name": "Origem"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS2_CSV_GENERICO",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AlterarNomeColuna"
+				},
+				{
+					"name": "MaiorAno1950"
+				},
+				{
+					"name": "ColunaDerivada1"
+				},
+				{
+					"name": "CriandoRankComJanela"
+				},
+				{
+					"name": "Agregar1"
+				}
+			],
+			"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as string,\n\t\tRating as string,\n\t\t{Rotton Tomato} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Origem\nOrigem select(mapColumn(\n\t\tmovie,\n\t\ttitle,\n\t\tgenres,\n\t\tyear,\n\t\tRating,\n\t\tRottienTomato = {Rotton Tomato}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> AlterarNomeColuna\nAlterarNomeColuna filter(toInteger(year) > 1950) ~> MaiorAno1950\nMaiorAno1950 derive(PrimeiroGener = iif(locate('|',genres ) > 1,  left(genres, locate('|', genres) -1 ), genres)) ~> ColunaDerivada1\nColunaDerivada1 window(over(PrimeiroGener,\n\t\tyear),\n\tasc(RottienTomato, true),\n\tRatingRank = rank()) ~> CriandoRankComJanela\nCriandoRankComJanela aggregate(groupBy(PrimeiroGener,\n\t\tyear),\n\tmediaRating = avg(toInteger(RottienTomato)),\n\t\tMaiorNumero = first(title),\n\t\tMenorNumero = last(title),\n\t\tNumeroFilmes = count()) ~> Agregar1\nAgregar1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as string,\n\t\tRating as string,\n\t\t{Rotton Tomato} as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\tpartitionBy('hash', 1)) ~> sink1"
+		}
+	}
+}

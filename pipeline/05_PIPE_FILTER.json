@@ -1,0 +1,187 @@
+{
+	"name": "05_PIPE_FILTER",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "*.csv"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Lookup csv",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "plan_cores.csv"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "lookup1 sql",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_AZURE_SQL_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"table": "ProductCategory"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Filtrar",
+				"description": "Filtrar todos que NÂO são azul",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Lookup csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_CSV').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(contains(item().cor, 'azul'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter2",
+				"description": "Filtrar todos que iniciam com o nome com a letra C",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata1').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item().name,'c') ",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter3",
+				"description": "Filtrar todos que contem BIKE",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lookup1 sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1_SQL').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().name, 'Bike') ",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/00_ACTIVITIES"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T23:47:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
