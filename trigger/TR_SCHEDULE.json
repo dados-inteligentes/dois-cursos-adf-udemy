@@ -1,0 +1,25 @@
+{
+	"name": "TR_SCHEDULE",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "05_PRATICA",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2022-03-06T12:46:00Z",
+				"endTime": "2022-03-07T13:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
