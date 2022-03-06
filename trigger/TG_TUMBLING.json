@@ -2,7 +2,7 @@
 	"name": "TG_TUMBLING",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "02_TRIGGER_TUMBLING",
