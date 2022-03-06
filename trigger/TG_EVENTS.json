@@ -1,0 +1,26 @@
+{
+	"name": "TG_EVENTS",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "03_TRIGGER_EVENTS",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/curso-adf-iniciantes-trigger-udemy/blobs/",
+			"blobPathEndsWith": ".txt",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/754dd087-abc1-47d7-b76f-5b4a6cc9dc72/resourceGroups/ENG-DADOS-UDEMY/providers/Microsoft.Storage/storageAccounts/adlsformacao",
+			"events": [
+				"Microsoft.Storage.BlobCreated",
+				"Microsoft.Storage.BlobDeleted"
+			]
+		}
+	}
+}
