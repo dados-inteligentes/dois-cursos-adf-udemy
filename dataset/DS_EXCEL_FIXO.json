@@ -1,0 +1,35 @@
+{
+	"name": "DS_EXCEL_FIXO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Plan1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "plan_cor.xlsx",
+				"folderPath": "excel-files",
+				"fileSystem": "curso-adf-iniciantes-udemy"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "id",
+				"type": "String"
+			},
+			{
+				"name": "cor",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

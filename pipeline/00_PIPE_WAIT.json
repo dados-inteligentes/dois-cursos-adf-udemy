@@ -1,0 +1,108 @@
+{
+	"name": "00_PIPE_WAIT",
+	"properties": {
+		"activities": [
+			{
+				"name": "esperar 10 segundos",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "*.csv"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "lookup csv",
+				"description": "Estou testando a opção de \"First row only\"\nSingleton Mode.  Para testar utilizo o Preview Data.",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "esperar 10 segundos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_CSV_GENERICO",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "curso-adf-iniciantes-udemy",
+							"path": "csv-files",
+							"file": "plan_cores.csv"
+						}
+					},
+					"firstRowOnly": true
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/00_ACTIVITIES"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T23:47:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

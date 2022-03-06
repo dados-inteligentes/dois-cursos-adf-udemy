@@ -1,0 +1,74 @@
+{
+	"name": "07_PIPE_PARAMETROS",
+	"properties": {
+		"activities": [
+			{
+				"name": "proc_upate_dt_insert",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[PROC_ACTIVITY_ADF01]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "proc_update_status",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "proc_upate_dt_insert",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[PROC_ACTIVITY_ADF02]",
+					"storedProcedureParameters": {
+						"PRECO": {
+							"value": {
+								"value": "@pipeline().parameters.parametro_valor",
+								"type": "Expression"
+							},
+							"type": "Decimal"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"parametro_valor": {
+				"type": "float"
+			}
+		},
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/00_ACTIVITIES"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T17:17:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

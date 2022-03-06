@@ -1,0 +1,46 @@
+{
+	"name": "08_PIPE_EXEC_PIPELINE",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline Lookup",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "03_PIPE_LOOKUP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Pipeline GetMeta Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02_PIPE_GETMETA_DATA",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/00_ACTIVITIES"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-05T17:17:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

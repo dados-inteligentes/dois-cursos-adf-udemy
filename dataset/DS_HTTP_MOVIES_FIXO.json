@@ -1,0 +1,25 @@
+{
+	"name": "DS_HTTP_MOVIES_FIXO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpServer_Origem",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CURSO-DOZERO-ENG-DADOS-UDEMY"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

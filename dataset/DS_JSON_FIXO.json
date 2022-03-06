@@ -1,0 +1,40 @@
+{
+	"name": "DS_JSON_FIXO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "jsonproduto.json",
+				"folderPath": "jsonfiles",
+				"fileSystem": "cursoadfiniciantes"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"codigo": {
+					"type": "integer"
+				},
+				"nome": {
+					"type": "string"
+				},
+				"preco": {
+					"type": "number"
+				},
+				"qtd_estoque": {
+					"type": "integer"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
