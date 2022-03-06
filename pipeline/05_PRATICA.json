@@ -1,0 +1,20 @@
+{
+	"name": "05_PRATICA",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 3
+				}
+			}
+		],
+		"folder": {
+			"name": "CURSO_ADF_INICIANTES_UDEMY/03_HANDSON"
+		},
+		"annotations": []
+	}
+}
