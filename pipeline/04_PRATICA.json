@@ -1,5 +1,5 @@
 {
-	"name": "PRATICA_04",
+	"name": "04_PRATICA",
 	"properties": {
 		"activities": [
 			{
@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PRATICA_01",
+						"referenceName": "01_PRATICA",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
@@ -29,7 +29,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PRATICA_02",
+						"referenceName": "02_PRATICA",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PRATICA_03",
+						"referenceName": "03_PRATICA",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
